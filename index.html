@@ -14,6 +14,26 @@ body {
   align-items: center;
   min-height: 100vh;
 }
+
+/* LOGO */
+.logo-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo-container div {
+  position: relative;
+}
+.logo-text {
+  margin-top: 33px;
+  color: #d4af37;
+  letter-spacing: 1px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* SORU EKRANLARI */
 .screen {
   display: none;
   width: 90%;
@@ -21,13 +41,17 @@ body {
   text-align: center;
   margin-top: 30px;
 }
+
 .active { display: block; }
+
 h1 { font-size: 26px; margin-bottom: 20px; }
+
 .options {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+
 .card {
   background: white;
   border-radius: 20px;
@@ -41,6 +65,7 @@ h1 { font-size: 26px; margin-bottom: 20px; }
   background: #e0f7fa;
 }
 .full { grid-column: span 2; }
+
 .money-box { font-size: 28px; margin: 20px 0; }
 .money-box input {
   width: 90px;
@@ -50,6 +75,7 @@ h1 { font-size: 26px; margin-bottom: 20px; }
   border: 2px solid #4CAF50;
 }
 .help { font-size: 18px; color: #555; }
+
 input[type="text"], input[type="tel"] {
   width: 90%;
   font-size: 22px;
@@ -58,6 +84,7 @@ input[type="text"], input[type="tel"] {
   border: 1px solid #ccc;
   margin-bottom: 15px;
 }
+
 button {
   font-size: 22px;
   padding: 15px 30px;
@@ -66,11 +93,39 @@ button {
   background: #4CAF50;
   color: white;
 }
+
 </style>
 </head>
 <body>
 
-<!-- Sorular -->
+<!-- LOGO -->
+<div class="logo-container">
+  <div style="width:156px; height:180px;">
+    <div style="
+      position:absolute; top:94px; left:50%; transform:translateX(-50%);
+      width:60px; height:36px; background:#d4af37;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    "></div>
+    <div style="
+      position:absolute; top:147px; left:50%;
+      width:48px; height:48px; background:#d4af37;
+      transform:translateX(-50%) rotate(45deg);
+    "></div>
+    <div style="
+      position:absolute; top:108px; left:18px;
+      width:48px; height:48px; background:#d4af37;
+      transform:rotate(45deg);
+    "></div>
+    <div style="
+      position:absolute; top:108px; right:18px;
+      width:48px; height:48px; background:#d4af37;
+      transform:rotate(45deg);
+    "></div>
+  </div>
+  <div class="logo-text">ELMAS</div>
+</div>
+
+<!-- SORULAR -->
 <div class="screen active">
   <h1>Ne istiyorsun?</h1>
   <div class="options">
@@ -120,21 +175,9 @@ button {
 <div class="screen">
   <h1>Seni tanıyalım 🙂</h1>
   <input type="text" id="name" placeholder="Adın">
-  <input type="tel" id="tel" placeholder="Telefonun">
+  <input type="text" id="tel" placeholder="Telefonun">
   <button onclick="finish()">Gönder</button>
 </div>
-
-<!-- Hidden iframe ile form submit -->
-<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-<form id="gameForm" action="https://docs.google.com/forms/d/e/1FAIpQLSehNuzCi7WGMeQw_JXAK3sEPfnBEzgEIovx-C3EOYqUG1wQmw/formResponse" method="POST" target="hidden_iframe">
-  <input type="hidden" name="entry.104994271" id="formType">
-  <input type="hidden" name="entry.1954403053" id="formMoney">
-  <input type="hidden" name="entry.2112205297" id="formCity">
-  <input type="hidden" name="entry.268235315" id="formRoom">
-  <input type="hidden" name="entry.123456789" id="formFloor"> <!-- Kat -->
-  <input type="hidden" name="entry.985507002" id="formName">
-  <input type="hidden" name="entry.1004051599" id="formTel">
-</form>
 
 <script>
 let index = 0;
@@ -143,8 +186,6 @@ let data = {};
 
 function setType(type) {
   data.type = type;
-  document.getElementById("formType").value = type;
-
   const suffix = document.getElementById("moneySuffix");
   const help = document.getElementById("moneyHelp");
   const title = document.getElementById("moneyTitle");
@@ -164,25 +205,21 @@ function setType(type) {
 function saveMoney() {
   const val = document.getElementById("moneyInput").value;
   data.money = val + (data.type === "Satılık" ? " milyon" : " bin");
-  document.getElementById("formMoney").value = data.money;
   next();
 }
 
 function setCity(city) {
   data.city = city;
-  document.getElementById("formCity").value = city;
   next();
 }
 
 function setRoom(room) {
   data.room = room;
-  document.getElementById("formRoom").value = room;
   next();
 }
 
 function setFloor(floor) {
   data.floor = floor;
-  document.getElementById("formFloor").value = floor;
   next();
 }
 
@@ -196,10 +233,19 @@ function finish() {
   data.name = document.getElementById("name").value;
   data.tel = document.getElementById("tel").value;
 
-  document.getElementById("formName").value = data.name;
-  document.getElementById("formTel").value = data.tel;
+  const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSehNuzCi7WGMeQw_JXAK3sEPfnBEzgEIovx-C3EOYqUG1wQmw/formResponse";
+  
 
-  document.getElementById("gameForm").submit();
+  const fd = new FormData();
+  fd.append("entry.104994271", data.type);
+  fd.append("entry.1954403053", data.money);
+  fd.append("entry.2112205297", data.city);
+  fd.append("entry.268235315", data.room);
+  fd.append("entry.985507002", data.name);
+  fd.append("entry.1004051599", data.tel);
+
+  fetch(formURL, { method: "POST", mode: "no-cors", body: fd });
+
   alert("Talebin alındı 👍");
 }
 </script>
