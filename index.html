@@ -2,128 +2,60 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ev Bulma</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.logo {
-  margin-top: 20px;
-  text-align: center;
-}
-.logo div {
-  position: relative;
-  width: 156px;
-  height: 180px;
-  margin: auto;
-}
-.logo div span {
-  position: absolute;
-  background: #d4af37;
-}
-.top { top:94px; left:50%; width:60px; height:36px; transform:translateX(-50%); clip-path:polygon(0 0,100% 0,50% 100%); }
-.mid { top:147px; left:50%; width:48px; height:48px; transform:translateX(-50%) rotate(45deg); }
-.l { top:108px; left:18px; width:48px; height:48px; transform:rotate(45deg); }
-.r { top:108px; right:18px; width:48px; height:48px; transform:rotate(45deg); }
-
-.screen { display:none; width:90%; max-width:500px; margin-top:30px; text-align:center; }
+body { font-family: Arial; background:#f2f2f2; text-align:center; }
+.screen { display:none; margin-top:40px; }
 .screen.active { display:block; }
-
-.options { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 .card {
-  background:#fff;
-  padding:20px;
-  border-radius:20px;
-  font-size:20px;
-  cursor:pointer;
-  box-shadow:0 4px 8px rgba(0,0,0,0.1);
+  background:#fff; padding:20px; margin:10px;
+  border-radius:15px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,.2);
 }
-
-input {
-  width:90%;
-  padding:14px;
-  font-size:18px;
-  border-radius:14px;
-  border:1px solid #ccc;
-}
-
-button {
-  padding:15px 30px;
-  font-size:18px;
-  border:none;
-  border-radius:20px;
-  background:#4CAF50;
-  color:white;
-}
+input { padding:12px; width:80%; margin:10px; }
+button { padding:14px 30px; font-size:18px; }
 </style>
 </head>
 
 <body>
 
-<div class="logo">
-  <div>
-    <span class="top"></span>
-    <span class="mid"></span>
-    <span class="l"></span>
-    <span class="r"></span>
-  </div>
-</div>
-
 <div class="screen active">
   <h2>Ne istiyorsun?</h2>
-  <div class="options">
-    <div class="card" onclick="setType('Satılık')">🏠 Satılık</div>
-    <div class="card" onclick="setType('Kiralık')">🔑 Kiralık</div>
-  </div>
+  <div class="card" onclick="setType('Satılık')">🏠 Satılık</div>
+  <div class="card" onclick="setType('Kiralık')">🔑 Kiralık</div>
 </div>
 
 <div class="screen">
   <h2>Bütçe</h2>
-  <input id="money" type="number">
+  <input id="money">
   <button onclick="next()">Devam</button>
 </div>
 
 <div class="screen">
   <h2>Şehir</h2>
-  <div class="options">
-    <div class="card" onclick="setCity('İstanbul')">İstanbul</div>
-    <div class="card" onclick="setCity('Ankara')">Ankara</div>
-    <div class="card" onclick="setCity('İzmir')">İzmir</div>
-  </div>
-</div>
-
-<div class="screen">
-  <h2>Oda</h2>
-  <div class="options">
-    <div class="card" onclick="setRoom('1+1')">1+1</div>
-    <div class="card" onclick="setRoom('2+1')">2+1</div>
-    <div class="card" onclick="setRoom('3+1')">3+1</div>
-  </div>
+  <div class="card" onclick="setCity('İstanbul')">İstanbul</div>
+  <div class="card" onclick="setCity('Ankara')">Ankara</div>
 </div>
 
 <div class="screen">
   <h2>İletişim</h2>
-  <input id="name" placeholder="Ad Soyad">
-  <input id="phone" placeholder="Telefon">
-  <button onclick="send()">Gönder</button>
+  <input id="name" placeholder="Ad">
+  <input id="tel" placeholder="Telefon">
+  <button onclick="sendForm()">Gönder</button>
 </div>
 
-<!-- GİZLİ FORM -->
-<form id="form" action="https://docs.google.com/forms/d/e/1FAIpQLSehNuzCi7WGMeQw_JXAK3sEPfnBEzgEIovx-C3EOYqUG1wQmw/formResponse" method="POST" target="hidden_iframe">
-  <input type="hidden" name="entry.104994271" id="f_type">
-  <input type="hidden" name="entry.1954403053" id="f_money">
-  <input type="hidden" name="entry.2112205297" id="f_city">
-  <input type="hidden" name="entry.268235315" id="f_room">
-  <input type="hidden" name="entry.985507002" id="f_name">
-  <input type="hidden" name="entry.1004051599" id="f_phone">
+<!-- GERÇEK FORM -->
+<form id="gform"
+  action="https://docs.google.com/forms/d/e/1FAIpQLSehNuzCi7WGMeQw_JXAK3sEPfnBEzgEIovx-C3EOYqUG1wQmw/formResponse"
+  method="POST"
+  target="hidden_iframe">
+
+  <input name="entry.104994271" id="f_type">
+  <input name="entry.1954403053" id="f_money">
+  <input name="entry.2112205297" id="f_city">
+  <input name="entry.985507002" id="f_name">
+  <input name="entry.1004051599" id="f_tel">
 </form>
 
 <iframe name="hidden_iframe" style="display:none;"></iframe>
@@ -141,21 +73,17 @@ function next() {
 
 function setType(v){ data.type=v; next(); }
 function setCity(v){ data.city=v; next(); }
-function setRoom(v){ data.room=v; next(); }
 
-function send(){
-  data.name = document.getElementById("name").value;
-  data.phone = document.getElementById("phone").value;
-
+function sendForm() {
   document.getElementById("f_type").value = data.type;
   document.getElementById("f_money").value = document.getElementById("money").value;
   document.getElementById("f_city").value = data.city;
-  document.getElementById("f_room").value = data.room;
-  document.getElementById("f_name").value = data.name;
-  document.getElementById("f_phone").value = data.phone;
+  document.getElementById("f_name").value = document.getElementById("name").value;
+  document.getElementById("f_tel").value = document.getElementById("tel").value;
 
-  document.getElementById("form").submit();
-  alert("Talebiniz başarıyla gönderildi!");
+  document.getElementById("gform").submit();
+
+  alert("✅ Talebin başarıyla alındı!");
 }
 </script>
 
