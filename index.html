@@ -58,7 +58,6 @@ input {
   font-size: 18px;
   border-radius: 14px;
   border: 1px solid #ccc;
-  margin-bottom: 15px;
 }
 
 button {
@@ -117,24 +116,9 @@ button {
   <button onclick="submitForm()">Gönder</button>
 </div>
 
-<!-- GİZLİ FORM -->
-<form id="googleForm"
-      action="https://docs.google.com/forms/d/e/1FAIpQLSc8ZL1BaPodwanhWRj0sOsJFRFfTLQvlut-VM2TVCXkD8o7Gg/formResponse"
-      method="POST"
-      target="hidden_iframe">
-  <input type="hidden" name="entry.1383727072" id="f_type">
-  <input type="hidden" name="entry.1429357412" id="f_budget">
-  <input type="hidden" name="entry.492503015" id="f_city">
-  <input type="hidden" name="entry.751111491" id="f_room">
-  <input type="hidden" name="entry.567089153" id="f_name">
-  <input type="hidden" name="entry.37570419" id="f_phone">
-</form>
-
-<iframe name="hidden_iframe" style="display:none;"></iframe>
-
 <script>
-let step = 0;
 let data = {};
+let step = 0;
 const screens = document.querySelectorAll(".screen");
 
 function next() {
@@ -167,15 +151,16 @@ function submitForm() {
   data.name = document.getElementById("name").value;
   data.phone = document.getElementById("phone").value;
 
-  document.getElementById("f_type").value = data.type;
-  document.getElementById("f_budget").value = data.budget;
-  document.getElementById("f_city").value = data.city;
-  document.getElementById("f_room").value = data.room;
-  document.getElementById("f_name").value = data.name;
-  document.getElementById("f_phone").value = data.phone;
+  const url =
+    "https://docs.google.com/forms/d/e/1FAIpQLSc8ZL1BaPodwanhWRj0sOsJFRFfTLQvlut-VM2TVCXkD8o7Gg/formResponse" +
+    "?entry.1383727072=" + encodeURIComponent(data.type) +
+    "&entry.1429357412=" + encodeURIComponent(data.budget) +
+    "&entry.492503015=" + encodeURIComponent(data.city) +
+    "&entry.751111491=" + encodeURIComponent(data.room) +
+    "&entry.567089153=" + encodeURIComponent(data.name) +
+    "&entry.37570419=" + encodeURIComponent(data.phone);
 
-  document.getElementById("googleForm").submit();
-  alert("Talebin başarıyla gönderildi ✅");
+  window.location.href = url;
 }
 </script>
 
