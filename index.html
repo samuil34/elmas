@@ -184,6 +184,18 @@ button {
   <h1>Sizi tanıyalım 🙂</h1>
   <input type="text" id="name" placeholder="Adın">
   <input type="tel" id="tel" placeholder="Telefonun">
+  
+  <div class="kvkk-box">
+  <label>
+    <input type="checkbox" id="kvkkCheck">
+    <span>
+      <a href="#" onclick="openKvkk(event)">
+        KVKK Aydınlatma Metni
+      </a>'ni okudum ve kabul ediyorum.
+    </span>
+  </label>
+</div>
+ 
   <button onclick="finish()">Gönder</button>
 </div>
 
@@ -205,7 +217,6 @@ button {
   ">
     Talebiniz başarıyla alındı!<br>En kısa sürede sizinle iletişime geçeceğiz 😊 <br> <br>Şimdi Elmas, talebinizi yapay zekâ destekli bir sistemle ön analizden geçiriyor. <br><br>
 Nihai değerlendirme ve bilgilendirme emlak danışmanlarımız tarafından yapılacaktır.
-
   </p>
 </div>
 
@@ -219,6 +230,7 @@ function showConfirmation() {
 <!-- ŞIK TİK MESAJI son -->
 
 <script>
+
 let index = 0;
 let data = {};
 const screens = document.querySelectorAll(".screen");
@@ -280,6 +292,12 @@ function finish() {
     alert("Lütfen telefonunuzu giriniz!");
     return;
   }
+  const kvkk = document.getElementById("kvkkCheck").checked;
+
+  if (!kvkk) {
+    alert("Devam etmek için KVKK onayını vermelisiniz.");
+    return;
+  }
 
   const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSc8ZL1BaPodwanhWRj0sOsJFRFfTLQvlut-VM2TVCXkD8o7Gg/formResponse";
 
@@ -300,10 +318,61 @@ function finish() {
   document.getElementById("confirmation").style.display = "block";
 }
 
+
+
+function openKvkk(e) {
+  e.preventDefault();
+  document.getElementById("kvkkModal").style.display = "block";
+}
+
+function closeKvkk() {
+  document.getElementById("kvkkModal").style.display = "none";
+}
+
+
+
+
 </script>
+
+<!-- KVKK MODAL -->
+<div id="kvkkModal" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:9999;
+">
+  <div style="
+    background:#fff;
+    max-width:600px;
+    margin:5% auto;
+    padding:20px;
+    border-radius:10px;
+    max-height:80vh;
+    overflow-y:auto;
+  ">
+    <h3>Kişisel Verilerin Korunması Aydınlatma Metni</h3>
+
+    <p>
+      Bu platform; kullanıcı etkileşimlerini yönetmek amacıyla...
+      <!-- BURAYA TAM KVKK METNİNİ YAPIŞTIR -->
+    </p>
+
+    <button onclick="closeKvkk()" style="
+      margin-top:15px;
+      padding:10px 20px;
+      background:#4CAF50;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+    ">
+      Kapat
+    </button>
+  </div>
+</div>
+
+
 
 </body>
 </html>
-
-
-
